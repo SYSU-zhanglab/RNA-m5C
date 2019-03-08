@@ -101,7 +101,7 @@ Most of the scripts can run stand-alone. Make sure python modules are installed.
 Running the pipeline
 ======================================================================================
 Please read ``m5C-BS-seq-step-by-step-computation-protocol-v1.0.pdf`` for details.
-If you are using task managers like ``SGE`` or ``SJM``, you can use the script ``m5C_pipeline_generator.py`` to generate .sh or .sjm files (for ``SJM``, you should install ``sjm_tools`` first).
+If you are using task managers like ``SGE`` or ``SJM``, you can use the script ``m5C_pipeline_generator.py`` to generate .sh or .sjm files (for ``SJM``, you need to install ``sjm_tools``(<https://github.com/sysuliujh/Bioinfo-toolkit/tree/master/sjm_tools>) first).
 
 
 Contact
