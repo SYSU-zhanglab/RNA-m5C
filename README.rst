@@ -84,9 +84,9 @@ Custom scripts
 +----------------------------------------+-------------------------------------+
 |m5C_caller_multiple.py                  |Call m5C sites from multiple samples |
 +----------------------------------------+-------------------------------------+
-|m5C_intersection_ single_r1.py          |Identify m5C sites in each sample    |
+|m5C_intersection_single_r1.py          |Identify m5C sites in each sample    |
 +----------------------------------------+-------------------------------------+
-|m5C_intersection_ multi_r1.py           |Identify m5C sites in replicates     |
+|m5C_intersection_multi_r1.py           |Identify m5C sites in replicates     |
 +----------------------------------------+-------------------------------------+
 
 
