@@ -12,9 +12,11 @@ Tested environment
 +--------------------+--------------------------------------+
 |RAM                 |70 GB or more                         |
 +--------------------+--------------------------------------+
-|Disk                |* 50 GB for human metadata            |
-|                    |* 200 GB for a 30 million PE150 data  |
-|                    |* 500 GB for a 200 million PE125 data |
+|Disk                |50 GB for human metadata              |
+|                    +--------------------------------------+
+|                    |200 GB for a 30 million PE150 data    |
+|                    +--------------------------------------+
+|                    |500 GB for a 200 million PE125 data   |
 +--------------------+--------------------------------------+
 * Windows is not compatible since some modules cannot be installed.
 
@@ -30,12 +32,15 @@ Tested software and open-source scripts
 +------------------------------+-----------------------------------------------+
 |JAVA                          |JRE 1.8.0_131                                  |
 +------------------------------+-----------------------------------------------+
-|Quality control and           |* Cutadapt 1.14                                |
-|formatting                    |* Trimmomatic 0.36                             |
+|Quality control and           | Cutadapt 1.14                                 |
+|formatting                    +-----------------------------------------------+
+|                              | Trimmomatic 0.36                              |
 +------------------------------+-----------------------------------------------+
-|Mapping                       |* HISAT2 2.1.0                                 |
-|                              |* Bowtie 2.2.9                                 |
-|                              |* meRanGh/meRanGs (compatible in theory)       |
+|Mapping                       | HISAT2 2.1.0                                  |
+|                              +-----------------------------------------------+
+|                              | Bowtie 2.2.9                                  |
+|                              +-----------------------------------------------+
+|                              | meRanGh/meRanGs (compatible in theory)        |
 +------------------------------+-----------------------------------------------+
 |Bam processing                |Samtools 1.6                                   |
 +------------------------------+-----------------------------------------------+
@@ -101,7 +106,7 @@ Most of the scripts can run stand-alone. Make sure python modules are installed.
 Running the pipeline
 ======================================================================================
 Please read ``m5C-BS-seq-step-by-step-computation-protocol-v1.0.pdf`` for details.
-If you are using task managers like ``SGE`` or ``SJM``, you can use the script ``m5C_pipeline_generator_qsub.py`` ``m5C_pipeline_generator_SJM.py`` to generate .sh or .sjm files (for ``SJM``, you need to install ``sjm_tools`` <https://github.com/sysuliujh/Bioinfo-toolkit/tree/master/sjm_tools> first).
+If you are using task managers like ``SGE`` or ``SJM``, you can use the script ``m5C_pipeline_generator_qsub.py`` or ``m5C_pipeline_generator_SJM.py`` to generate .sh or .sjm files (for ``SJM``, you need to install ``sjm_tools`` <https://github.com/sysuliujh/Bioinfo-toolkit/tree/master/sjm_tools> first).
 
 
 Contact
