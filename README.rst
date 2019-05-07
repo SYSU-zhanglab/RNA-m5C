@@ -117,5 +117,5 @@ Please contact ``Jianheng Liu (liujh26@mail2.sysu.edu.cn)`` for questions and bu
 
 Citation
 ======================================================================================
-(coming soon)
+Please cite ``Huang, T., Chen, W., Liu, J., Gu, N. & Zhang, R. Genome-wide identification of mRNA 5-methylcytosine in mammals. Nature structural & molecular biology, doi:10.1038/s41594-019-0218-x (2019)``<https://www.nature.com/articles/s41594-019-0218-x>.
 
