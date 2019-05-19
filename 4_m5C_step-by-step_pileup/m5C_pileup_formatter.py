@@ -7,6 +7,89 @@ import sqlite3
 import time
 from time import gmtime, strftime
 import numpy as np
+
+def create_table(cursor): #id text PRIMARY KEY
+	sql = """ CREATE TABLE IF NOT EXISTS 
+			locations (
+				chr text NOT NULL,
+				pos integer NOT NULL,
+				dir text NOT NULL,
+				gene text NOT NULL,
+				trans text NOT NULL,
+				name text NOT NULL,
+				isoform text NOT NULL,
+				biotype text NOT NULL
+			); 
+		   """
+	cursor.execute(sql)
+
+def insert_var(cursor,chr,pos,dir,gene,trans,name,isoform,biotype):
+	cursor.execute("insert into locations (chr, pos, dir, gene, trans, name, isoform, biotype) values ( ?, ?, ?, ?, ?, ?, ?, ?)", (chr,pos,dir,gene,trans,name,isoform,biotype)) #id
+
+def insert_many_var(cursor,rows):
+	cursor.executemany("""
+	insert into locations (chr, pos, dir, gene, trans, name, isoform, biotype) values ( ?, ?, ?, ?, ?, ?, ?, ?)
+	""",rows)
+
+def create_index(cursor):
+	cursor.execute("CREATE INDEX locations_index ON locations (chr,dir,pos)")
+	
+def build_database():
+	global database,cursor,conn
+	with open(options.database,'r') as input:
+		line = input.readline()
+		if options.method == "sql":
+			conn = sqlite3.connect(":memory:")
+			cursor = conn.cursor()
+			create_table(cursor)
+			cursor.execute("PRAGMA cache_size=65536")
+			cursor.execute("PRAGMA page_size=65536")
+			cursor.execute('PRAGMA temp_store=MEMORY')
+			cursor.execute("PRAGMA synchronous=OFF")
+			cursor.execute('PRAGMA journal_mode=MEMORY')
+		elif options.method == "dict":
+			# cursor = None
+			# database = {}
+			pass
+		n = 0
+		rows = []
+		while(line):
+			line = line.strip().split("\t")
+			chr = line[0]
+			pos_1 = line[2]
+			dir = line[3]
+			gene = line[4]
+			trans = line[5]
+			name = line[6]
+			isoform = line[7]
+			biotype = line[8]
+			#id = "@".join([chr,pos_1,dir])
+			if options.method == "sql":
+				#slow
+				#insert_var(cursor,chr,int(pos_1),dir,gene,trans,name,isoform,biotype)
+				rows.append([chr,int(pos_1),dir,gene,trans,name,isoform,biotype])
+			elif options.method == "dict":
+				database[(chr,int(pos_1),dir)] = [gene,name,trans,isoform,biotype] #SELECT gene,name,trans,isoform,biotype
+			n += 1
+			if n%1000000 == 0:
+				if options.method == "sql":
+					insert_many_var(cursor,rows)
+					rows = []
+				sys.stderr.write("[%s] %d items processed...\n" % (strftime("%Y-%m-%d %H:%M:%S", time.localtime()),n))
+			line = input.readline()
+		if options.method == "sql":
+			if rows:
+				insert_many_var(cursor,rows)
+				rows = []
+	if options.method == "sql":
+		sys.stderr.write("[%s] All loaded. Creating index...\n" % strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+		create_index(cursor)
+		sys.stderr.write("[%s] All finished!\n" % strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+		# return database,cursor
+	elif options.method == "dict":
+		pass
+		# return database,cursor
+
 def write_CR():
 	#ALL	900365017	2875105	0.00319326600403
 	#ELSE	85530991	352474	0.00412100919069
@@ -37,26 +120,43 @@ def write_CR():
 		for line in lines:
 			CR_output.write("#")
 			CR_output.write(line)
-
+'''
 def create_connection(db_file):
 	if os.path.isfile(db_file):
-		conn = sqlite3.connect(db_file)
+		conn_old = sqlite3.connect(db_file)
+		conn = sqlite3.connect(':memory:')
+		query = ""
+		for line in conn_old.iterdump():
+			if line.endswith(";")
+				conn.executescript(query)
+				query = ""
+			else:
+				query = "".join([query,line])
+		# query = "".join(line for line in conn_old.iterdump())
+		# conn.executescript(query)
+		conn_old.close()
 	else:
 		raise IOError("Database file not exist.\n")
 	return conn
-
-def search(cursor,chr,dir,pos):
-	cursor.execute("SELECT gene,name,trans,isoform,biotype FROM locations WHERE chr=? AND dir=? AND pos=?",(chr,dir,pos))
-	rows = cursor.fetchall()
-	if rows:
-		return [str(i) for i in rows[0]]
+'''
+def search(chr,dir,pos,database=None,cursor=None):
+	if options.method == "sql":
+		cursor.execute("SELECT gene,name,trans,isoform,biotype FROM locations WHERE chr=? AND dir=? AND pos=?",(chr,dir,pos))
+		rows = cursor.fetchall()
+		if rows:
+			return [str(i) for i in rows[0]]
+		else:
+			return None
 	else:
-		return None
-
-def Tideup(chr,pos_1,dir,PIPLEUPS,SURROUNDINGS):
-	global cursor,output,all_C,all_cov
+		return database.get((chr,dir,pos))
+	
+def Tideup(chr,pos_1,dir,PIPLEUPS,SURROUNDINGS,database=None,cursor=None):
+	global output,all_C,all_cov
 	#print 2,len(PIPLEUPS),len(SURROUNDINGS)
-	query = search(cursor,chr,dir,pos_1)
+	if options.method == "sql":
+		query = search(chr,dir,pos_1,cursor=cursor)
+	elif options.method=="dict":
+		query = search(chr,dir,pos_1,database=database)
 	if query is not None:
 		gene,name,trans,isoform,biotype = query
 		GENE = gene
@@ -72,10 +172,9 @@ def Tideup(chr,pos_1,dir,PIPLEUPS,SURROUNDINGS):
 			while surr > limits[-1]:
 				index = limits.pop()
 				bins[index] = copy.copy(counts)
-		
 		if base != "N":
-			counts["total"] += count
 			counts[base] += count
+			counts["total"] += count
 		if base == "C" or base == "T":
 			counts["CT"] += count
 	for item in limits:
@@ -98,27 +197,14 @@ def Tideup(chr,pos_1,dir,PIPLEUPS,SURROUNDINGS):
 	all_C += counts['C']
 	all_cov += counts['CT']
 	
-def check(chr,pos_1,dir,pileup,surrounding):
-	global PIPLEUPS,SURROUNDINGS,last
-	if not last: #first in
-		last = (chr,pos_1,dir)
-		PIPLEUPS.extend(pileup)
-		SURROUNDINGS.extend(surrounding)
-	else:
-		if last == (chr,pos_1,dir): #keep putting items
-			PIPLEUPS.extend(pileup)
-			SURROUNDINGS.extend(surrounding)
-		else: #To output
-			#print 1,len(PIPLEUPS),len(SURROUNDINGS)
-			Tideup(last[0],last[1],last[2],PIPLEUPS,SURROUNDINGS)
-			PIPLEUPS = []
-			SURROUNDINGS = []
-			last = (chr,pos_1,dir)
-			PIPLEUPS.extend(pileup)
-			SURROUNDINGS.extend(surrounding)
-	
+def check(chr,pos_1,dir,pileup,surrounding,database,cursor):
+	PIPLEUPS = pileup
+	SURROUNDINGS = surrounding
+	Tideup(chr,pos_1,dir,PIPLEUPS,SURROUNDINGS,database=database,cursor=cursor)
+
 if __name__ == "__main__":
 	description = """
+	Input should be no redundance
 	"""
 	parser = argparse.ArgumentParser(prog="",fromfile_prefix_chars='@',description=description,formatter_class=argparse.RawTextHelpFormatter)
 	#Require
@@ -127,31 +213,29 @@ if __name__ == "__main__":
 	group_require.add_argument("-o","--output",dest="output",required=True,help="output") #chr start_0 start
 	group_require.add_argument("--CR",dest="conversion",required=True,help="gene conversion rate")
 	group_require.add_argument("--db",dest="database",required=True,help="database, base-gene annotation")
-	group_optional = parser.add_argument_group("Optional")
-	group_optional.add_argument("-c","--coverage",dest="cov",default=10,type=int,help="coverage, default=10")
-	group_optional.add_argument("-r","--ratio",dest="ratio",default=0.1,type=float,help="m5C level/ratio, default=0.1")
-	group_optional.add_argument("-p","--pvalue",dest="pvalue",default=0.05,type=float,help="binomial pvalue, default=0.05")
+	group_require.add_argument("--method",dest="method",default="sql",choices=["sql","dict"],help="database type, sql or dictionary")
+	# group_optional = parser.add_argument_group("Optional")
 	group_other = parser.add_argument_group("Other")
 	options = parser.parse_args()
 	
 	sys.stderr.write("[%s] Reading input...\n" % strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
 	
-	database = create_connection(options.database)
-	cursor = database.cursor()
-	# cursor.execute("PRAGMA cache_size =8000")
-	# cursor.execute("PRAGMA page_size = 8192")
-	# cursor.execute("PRAGMA temp_store =2")
-	# cursor.execute("PRAGMA synchronous=OFF")
-	cursor.execute("PRAGMA journal_mode = WAL") #do not need a write lock while reading, so enable multiple reading
-	
+	if options.method == "sql":
+		database = None
+		cursor = None
+		conn = None
+	elif options.method == "dict":
+		database = {}
+		cursor = None
+		conn = None
+	build_database()
+	sys.stderr.write("[%s] In-memory database connection setup\n" % strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
 	#init
 	result_cov = defaultdict(int)
 	result_C = defaultdict(int)
 	all_cov = 0
 	all_C = 0
-	PIPLEUPS= []
-	SURROUNDINGS = []
-	last = None
+
 	with open(options.input,'r') as input,file(options.output+"_tmp",'w') as output:
 		#10      100007581(1-based)       -       C       ENST00000260702 3519    T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 		#10      100007581       -       C       Genome  100007581       T,T,T,T,T,T,T,T,T,T,T   0,0,0,0,0,0,0,0,0,0,0
@@ -165,13 +249,21 @@ if __name__ == "__main__":
 			pileup = row[6].split(",")
 			surrounding = [int(i) for i in row[7].split(",")]
 			if base == "C":
-				check(chr,pos_1,dir,pileup,surrounding)
+				check(chr,pos_1,dir,pileup,surrounding,database,cursor)
+				# if options.method == "sql":
+					# check(chr,pos_1,dir,pileup,surrounding,database=database,cursor=cursor)
+				# elif options.method == "dict":
+					# check(chr,pos_1,dir,pileup,surrounding,database=database,cursor=cursor)
 			line = input.readline()
-		Tideup(last[0],last[1],last[2],PIPLEUPS,SURROUNDINGS)
+
 	sys.stderr.write("[%s] Finished reading input.\n" % strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
 	#get conversion rates
 	write_CR()
 	sys.stderr.write("[%s] Calculating conversion rates...\n" % strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
 	os.system("cat %s %s > %s" % (options.conversion,options.output+"_tmp",options.output))
 	os.remove(options.output+"_tmp")
+	if options.database == "sql":
+		database.close()
+	else:
+		del database
 	sys.stderr.write("[%s] All finished!\n" % strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
