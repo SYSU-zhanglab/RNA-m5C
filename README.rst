@@ -1,7 +1,7 @@
 Update 2019-5-19:
 m5C_pileup_formatter.py -- fix version error
 
-Step-by-step m5C site calling pipeline (v1.0)
+Step-by-step m5C site calling pipeline (v1.1)
 ======================================================================================
 This is a highly modularized pipeline used in our mRNA m5C sequencing project.
 
