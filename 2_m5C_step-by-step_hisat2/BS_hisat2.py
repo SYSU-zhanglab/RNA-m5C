@@ -122,7 +122,7 @@ def read_C_position(fwd,rev=None):
 	return fwd_read_dict,rev_read_dict,total_reads
 	
 def mapping_string(parameters,fwd,rev):
-	if "-P" not in parameters:
+	if "-p" not in parameters:
 		parameters["-p"] = '5'
 	if "-k" not in parameters:
 		parameters["-k"] = '10'
