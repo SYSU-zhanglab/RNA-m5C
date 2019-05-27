@@ -147,7 +147,7 @@ def read_C_position(fwd,rev=None):
 def mapping_string(parameters,fwd,rev):
 	# if "--reorder" not in parameters:
 		# parameters["--reorder"] = None
-	if "-P" not in parameters:
+	if "-p" not in parameters:
 		parameters["-p"] = '8'
 	if "-k" not in parameters and "-a" not in parameters:
 		parameters["-k"] = '10'
