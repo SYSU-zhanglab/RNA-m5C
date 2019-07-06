@@ -26,7 +26,7 @@ Tested environment
 
 Python version and modules
 ======================================================================================
-Python 2.7.14 with numpy (1.13.3), scipy (0.19.1), pysam (0.12.0.1), Biopython (1.70).
+Python 2.7.14/2.7.16 with numpy (1.13.3), scipy (0.19.1), pysam (0.12.0.1), Biopython (1.70).
 Higher versions of these modules should be compatible.
 
 
@@ -41,7 +41,7 @@ Tested software and open-source scripts
 +------------------------------+-----------------------------------------------+
 |Mapping                       | HISAT2 2.1.0                                  |
 |                              +-----------------------------------------------+
-|                              | Bowtie 2.2.9                                  |
+|                              | Bowtie 2.2.9/2.3.4.2                          |
 |                              +-----------------------------------------------+
 |                              | meRanGh/meRanGs (compatible in theory)        |
 +------------------------------+-----------------------------------------------+
