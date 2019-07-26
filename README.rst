@@ -1,3 +1,6 @@
+Update 2019-7-26:
+m5C_caller_multiple.py -- fix a bug in using overall conversion rate
+
 Update 2019-5-19:
 m5C_pileup_formatter.py -- fix version error
 
