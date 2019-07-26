@@ -1,11 +1,4 @@
-#!bin/usr/env python
-
-#Jianheng Liu @ Zhanglab, SYSU
-#Feb, 2018
-#Email: liujh26@mail2.sysu.edu.cn
-#Usage: This program is to call m5C sites among multiple samples in a sample sheet
-#Input: [pileups] [sample sheet]
-
+#!/usr/bin/env python
 import os,sys
 import argparse
 from collections import defaultdict,Counter
@@ -57,7 +50,6 @@ def read_CR(input,nonCRs,control):
 	return line,input,nonCRs,control
 
 def call_m5C(line,nonCRs,CR,C_cutoff,control):
-	boostup = {}
 	col = C_cutoff_cols.get(C_cutoff)
 	chr,pos_1,dir,gene,name,trans,isoform,biotype,total_cov,CT,A_count,T_count,C_count,G_count = line[0:14]
 	total_cov = int(total_cov)
@@ -86,7 +78,7 @@ def call_m5C(line,nonCRs,CR,C_cutoff,control):
 			nonCR = nonCR_gene
 		elif CR == "overall":
 			if nonCR_gene == 1.0:
-				non_CR = 1.0
+				nonCR = 1.0
 			else:
 				nonCR = nonCRs.get("ALL")
 		elif CR == "control":
@@ -138,7 +130,7 @@ def fetch_m5C(line,nonCRs,CR,C_cutoff,control):
 			nonCR = nonCR_gene
 		elif CR == "overall":
 			if nonCR_gene == 1.0:
-				non_CR = 1.0
+				nonCR = 1.0
 			else:
 				nonCR = nonCRs.get("ALL")
 		elif CR == "control":
@@ -336,7 +328,7 @@ if __name__ == "__main__":
 	#Statistics
 	group_stat = parser.add_argument_group("Statistic method")
 	group_stat.add_argument("--method",dest="method",default="binomial",choices=['binomial', 'fisher', 'poisson'],help="statistical method: binomial, fisher exact test, or poisson, default=binomial")
-	group_stat.add_argument("--CR",dest="conversion_rate",default="gene",choices=['gene','overall','control'],help="conversion rate used: gene or overall, default=gene")
+	#group_stat.add_argument("--CR",dest="conversion_rate",default="gene",choices=['gene','overall','control'],help="conversion rate used: gene or overall, default=gene")
 	group_stat.add_argument("--NA",dest="non_anno",default="ELSE",choices=['ELSE','Median','Mean','ALL',"discard"],help="which CR to use if no aene annotation, default=ELSE")
 	group_stat.add_argument("--control",dest="control",help="control list, median non-conversion rate will be used")
 	#Version
