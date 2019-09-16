@@ -1,5 +1,6 @@
 Update 2019-9-16:
-*important update* I found that the `pileup`` function was update after pysam v0.15.0. An important change is that pysam will no longer return non-``proper`` alignments as default. This can result in underestimated coverages and inaccurate m5C levels. To avoid this, you can add ``ignore_orphans=False`` and ``ignore_overlaps=False`` to Line 29 in the original file. Or please use ``pileup_genome_multiprocessing_v1.4_pysam_v0.15.0.py`` if you are using pysam version >= v0.15.0.
+
+#important update# I found that the `pileup`` function was update after pysam v0.15.0. An important change is that pysam will no longer return non-``proper`` alignments as default. This can result in underestimated coverages and inaccurate m5C levels. To avoid this, you can add ``ignore_orphans=False`` and ``ignore_overlaps=False`` to Line 29 in the original file. Or please use ``pileup_genome_multiprocessing_v1.4_pysam_v0.15.0.py`` if you are using pysam version >= v0.15.0.
 
 Update 2019-7-26:
 m5C_caller_multiple.py -- fix a bug in using overall conversion rate
