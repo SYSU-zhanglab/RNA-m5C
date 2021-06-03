@@ -1,3 +1,6 @@
+Update 2021-6-3:
+We are updating a galaxy verion of this pipeline.
+
 Update 2019-11-4:
 
 There should be some bugs in the replicate merging step, since some extreme situations might not be considerated. If anyone got errors while running that script, don't be hesitant to inform the author.
