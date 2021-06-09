@@ -38,9 +38,7 @@ Tested environment
 +--------------------+--------------------------------------+
 * Windows is not compatible since some modules cannot be installed.
 
-* After pileup, it requires ~25G memory to tidy up the results for human genome. Use a 
-database in disk will decrese the amount of memory usage, but the program runs much
-slower.
+* After pileup, it requires ~25G memory to tidy up the results for human genome. Use a database in disk will decrese the amount of memory usage, but the program runs much slower.
 
 Python version and modules
 ======================================================================================
