@@ -38,7 +38,9 @@ Tested environment
 +--------------------+--------------------------------------+
 * Windows is not compatible since some modules cannot be installed.
 
-* After pileup, it requires ~25G memory to tidy up the results for human genome. Use a database in disk will decrese the amount of memory usage, but the program runs much slower.
+* Exactly, we don't need so much disk... Add some clean-up steps and compress the results will help. 60+GB is a reasonable size for compressed results from ~100 million raw reads (2.2GB for the pileup results, you can delete the useless files to release the disk). Normally, 20GB is enough for 30 million reads.
+
+* After pileup, it requires ~25GB memory to tidy up the results for human genome. Use a database in disk will decrese the amount of memory usage, but the program runs much slower.
 
 Python version and modules
 ======================================================================================
