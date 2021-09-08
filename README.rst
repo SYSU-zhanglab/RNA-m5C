@@ -1,3 +1,7 @@
+Update 2021-9-8:
+
+Update scripts in python3
+
 Update 2021-6-30:
 
 It shows that hisat-3N is a very powerful tool for BS-seq alignment. We are developping a new pipeline to integrate it.
