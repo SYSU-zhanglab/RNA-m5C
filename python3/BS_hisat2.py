@@ -604,18 +604,18 @@ def sam_handler_PE():
 		hisat2_C2T_SAM = options.continue_prefix+".C2T.sam"
 		hisat2_G2A_SAM = options.continue_prefix+".G2A.sam"
 		
-	# with pysam.Alignmentopen("hisat2.C2T.sam","r") as C2T_SAM, \
-		 # pysam.Alignmentopen("hisat2.G2A.sam","r") as G2A_SAM, \
-		 # pysam.Alignmentopen(options.output+".bam","wb",template=C2T_SAM) as output, \
+	# with pysam.AlignmentFile("hisat2.C2T.sam","r") as C2T_SAM, \
+		 # pysam.AlignmentFile("hisat2.G2A.sam","r") as G2A_SAM, \
+		 # pysam.AlignmentFile(options.output+".bam","wb",template=C2T_SAM) as output, \
 		 # open(unal_1,'w') as unal_read1, \
 		 # open(unal_2,'w') as unal_read2, \
-		 # pysam.Alignmentopen(options.output+".multimappers.bam","wb",template=C2T_SAM) as multi_output:
-	with pysam.Alignmentopen(hisat2_C2T_SAM,"r") as C2T_SAM, \
-		 pysam.Alignmentopen(hisat2_G2A_SAM,"r") as G2A_SAM, \
-		 pysam.Alignmentopen(options.output+".bam","wb",template=C2T_SAM) as output, \
+		 # pysam.AlignmentFile(options.output+".multimappers.bam","wb",template=C2T_SAM) as multi_output:
+	with pysam.AlignmentFile(hisat2_C2T_SAM,"r") as C2T_SAM, \
+		 pysam.AlignmentFile(hisat2_G2A_SAM,"r") as G2A_SAM, \
+		 pysam.AlignmentFile(options.output+".bam","wb",template=C2T_SAM) as output, \
 		 open(unal_1,'w') as unal_read1, \
 		 open(unal_2,'w') as unal_read2, \
-		 pysam.Alignmentopen(options.output+".multimappers.bam","wb",template=C2T_SAM) as multi_output:
+		 pysam.AlignmentFile(options.output+".multimappers.bam","wb",template=C2T_SAM) as multi_output:
 		C2T_iter = C2T_SAM.fetch(until_eof=True)
 		G2A_iter = G2A_SAM.fetch(until_eof=True)
 		C2T_next = None
@@ -669,12 +669,12 @@ def sam_handler_SE():
 	else:
 		hisat2_C2T_SAM = options.continue_prefix+".C2T.sam"
 		hisat2_G2A_SAM = options.continue_prefix+".G2A.sam"
-	with pysam.Alignmentopen(hisat2_C2T_SAM,"r") as C2T_SAM, \
-		 pysam.Alignmentopen(hisat2_G2A_SAM,"r") as G2A_SAM, \
-		 pysam.Alignmentopen(options.output+".bam","wb",template=C2T_SAM) as output, \
+	with pysam.AlignmentFile(hisat2_C2T_SAM,"r") as C2T_SAM, \
+		 pysam.AlignmentFile(hisat2_G2A_SAM,"r") as G2A_SAM, \
+		 pysam.AlignmentFile(options.output+".bam","wb",template=C2T_SAM) as output, \
 		 open(unal_1,'w') as unal_read1, \
 		 open(unal_2,'w') as unal_read2, \
-		 pysam.Alignmentopen(options.output+".multimappers.bam","wb",template=C2T_SAM) as multi_output:
+		 pysam.AlignmentFile(options.output+".multimappers.bam","wb",template=C2T_SAM) as multi_output:
 		C2T_iter = C2T_SAM.fetch(until_eof=True)
 		G2A_iter = G2A_SAM.fetch(until_eof=True)
 		C2T_next = None
