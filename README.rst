@@ -1,6 +1,6 @@
 Update 2021-9-8:
 
-Update scripts in python3
+Update scripts in python3 (give up...)
 
 Update 2021-6-30:
 
