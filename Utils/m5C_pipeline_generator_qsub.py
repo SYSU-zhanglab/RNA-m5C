@@ -6,6 +6,57 @@ import sys,os
 if not sys.argv[1]:
 	print "Usage: python %s <input.txt>" % (sys.argv[0])
 
+def check_env(fn,is_preifx=False,unknown=False,exit=True):
+	''' check if file/files exist '''
+	if is_preifx == True:
+		prefix = fn.split("/")[-1]
+		path = re.sub("/*$","/$",fn)
+		num_files = 0
+		for files in os.listdir(path):
+			if re.search("^"+prefix,files):
+				num_files += 1
+		if num_files == 0:
+			if exit:
+				raise Warning("%s: no file with this prefix found!" % fn)
+			else:
+				sys.stderr.write("%s: no file with this prefix found!" % fn)
+				return None
+		else:
+			sys.stderr.write("%s: passed. %d files with this prefix.\n" % (fn,num_files))
+			return None
+	else:
+		if os.path.isflie(fn) == True:
+			sys.stderr.write("%s validated.\n" % fn)
+			return None
+		else:
+			if exit:
+				raise Warning("%s not exist!" % fn)
+			else:
+				sys.stderr.write("%s not exist!\n" % fn)
+				return None
+	if unknown == True:
+		prefix = fn.split("/")[-1]
+		path = re.sub("/*$","/$",fn)
+		num_files = 0
+		is_file = False
+		for files in os.listdir(path):
+			if re.search("^"+prefix,files):
+				num_files += 1
+		if os.path.isflie(fn) == True:
+			is_file = True
+		if is_file == True:
+			sys.stderr.write("%s validated. A file named this found.\n" % fn)
+			return None
+		elif num_files > 0:
+			sys.stderr.write("%s validated. Files with this prefix found (%d).\n" % (fn,num_files))
+			return None
+		else:
+			if exit:
+				raise Warning("%s is neither a file nor a prefix!" % fn)
+			else:
+				sys.stderr.write("%s is neither a file nor a prefix!\n" % fn)
+				return None
+
 #metadata
 ref_genome_index = check_env("</path/to/hisat2_index/>",is_path=True)
 ref_genome = check_env("</path/to/genome_fasta>")
