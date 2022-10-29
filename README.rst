@@ -1,3 +1,7 @@
+Update 2022-10-29:
+
+Congrats the publication of the m6A field game changer [GLORI](https://www.nature.com/articles/s41587-022-01487-9)! So happy to be the source of inspiration to their pipeline!!
+
 Update 2021-9-8:
 
 Update scripts in python3 (give up...)
