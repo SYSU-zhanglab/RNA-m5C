@@ -1,3 +1,7 @@
+Update 2023-5-30:
+
+A pipeline for GLORI is available here: https://github.com/jhfoxliu/GLORI_pipeline
+
 Update 2022-10-29:
 
 Congrats the publication of the m6A field game changer `GLORI <https://www.nature.com/articles/s41587-022-01487-9>`_! So happy to be the source of inspiration to their pipeline!!
